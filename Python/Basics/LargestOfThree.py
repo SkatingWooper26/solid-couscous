@@ -1,7 +1,5 @@
 
 def largestOfThree(a, b, c):
-    if a == b == c:
-        return None
     return max(a, b, c)
 
 num1 = int(input("Enter the first number: "))
