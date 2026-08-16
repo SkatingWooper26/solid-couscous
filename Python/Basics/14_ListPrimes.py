@@ -16,5 +16,8 @@ def listPrimes(num):
         
     return result
     
-print(listPrimes(10))
-        
+number = int(input("Enter a number: "))
+
+primes = listPrimes(number)
+
+print(f"The primes before the number {number} are", *primes)
