@@ -1,0 +1,20 @@
+import math
+
+def listPrimes(num):
+    result = []
+    
+    for i in range(2, num):
+        isPrime = True
+        
+        for number in range(2, int(math.sqrt(i)) + 1):
+            if i % number == 0:
+                isPrime = False
+                break
+        
+        if isPrime:
+            result.append(i)
+        
+    return result
+    
+print(listPrimes(10))
+        
