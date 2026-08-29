@@ -1,14 +1,18 @@
 
+from pathlib import Path
+
+FILE_PATH = Path(__file__).resolve().parent / "30_FileHandling.txt"
+
 
 def edit_file(text, mode):
-    with open("30_FileHandling.txt", mode) as document:
+    with FILE_PATH.open(mode, encoding="utf-8") as document:
         if mode == "a" and document.tell() > 0:
             document.write("\n")
         document.write(text)
         document.write("\n")
-        
+
 def read_file(specified_line):
-    with open("30_FileHandling.txt") as document:
+    with FILE_PATH.open(encoding="utf-8") as document:
         content = document.readlines()
         if specified_line < 1 or specified_line > len(content):
             raise IndexError("Line number is outside the file")
