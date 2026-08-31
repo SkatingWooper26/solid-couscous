@@ -10,7 +10,7 @@ def get_formatted_date(date=None):
 
 def main():
     choice = ""
-    while choice not in ("yes", "no")
+    while choice not in ("yes", "no"):
         choice = input("Do you want the date? (YES/NO): ").strip().lower()
         
     if choice == "yes":
