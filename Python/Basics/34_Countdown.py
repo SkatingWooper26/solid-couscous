@@ -21,7 +21,6 @@ def get_valid_seconds() -> int:
                 print("Please enter a valid amount of seconds")
     
 def main() -> None:
-    
     countdown(get_valid_seconds())
     
     
