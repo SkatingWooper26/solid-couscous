@@ -1,5 +1,37 @@
+from pathlib import PosixPath
+import json
 import random
 
+LEADERBOARD_PATH = PosixPath(__file__).resolve().parent / "Leaderboards.json"
+
+def load_leaderboards() -> dict:
+    with LEADERBOARD_PATH.open(encoding = "utf-8") as f:
+        return json.load(f)
+
+def save_leaderboards(data: dict) -> None:
+    with LEADERBOARD_PATH.open("w", encoding="utf-8") as leaderboards:
+        json.dump(data, leaderboards, indent=4)
+
+def get_leaderboards(wanted_difficulty: str | None = None) -> dict:
+    leaderboard_data = load_leaderboards()
+    
+    if wanted_difficulty is not None:
+        return leaderboard_data[wanted_difficulty]
+    else:
+        return leaderboard_data
+        
+def update_leaderboards(name: str, difficulty: str, score: int) -> None:
+    leaderboard_data = load_leaderboards()
+        
+    if difficulty not in leaderboard_data:
+        leaderboard_data[difficulty] = {}
+        
+    if name not in leaderboard_data[difficulty]:
+        leaderboard_data[difficulty][name] = score
+    elif leaderboard_data[difficulty][name] < score:
+        leaderboard_data[difficulty].update({name:score})
+
+    save_leaderboards(leaderboard_data)
 
 def get_choice(
     question: str, 
@@ -26,6 +58,7 @@ def get_positive_int(
             result = int(input(question))
         except ValueError:
             print("Please enter a whole number")
+            continue
         
         if result < minimum:
             print(f"Please enter a number above {minimum}")
@@ -40,10 +73,13 @@ def get_positive_int(
 def guess_number(
     min_number:int = 1, 
     max_number:int = 100
-) -> None:
+) -> int:
     target = random.randint(min_number, max_number)
     guess = 0
     attempts = 0
+    
+    current_score = 0
+    max_score = (max_number - min_number) * 10
     
     while True:
         attempts += 1
@@ -62,11 +98,15 @@ def guess_number(
         else:
             print("There seems to be an error")
     print(f"It took {attempts} guesses!")
+    current_score = attempts * 5
+    return max_score - current_score
 
-def play_levels(levels: list[int]) -> None:
+def play_levels(levels: list[int]) -> int:
+    total_score = 0
     for index, level in enumerate(levels, start=1):
         print(f"Level {index}")
-        guess_number(max_number=level)
+        total_score += guess_number(max_number=level)
+    return total_score
 
 def main() -> None:
     modes = {
@@ -75,6 +115,7 @@ def main() -> None:
         "hard": (100, 500, 1000, 2500, 10000),
         "custom": "N/A"
     }
+    name = input("Please enter a username: ").lower()
     
     while True:
         modes_keys = list(modes.keys())
@@ -85,10 +126,12 @@ def main() -> None:
             upper_bound = get_positive_int("Please enter the upper bound: ")
             if lower_bound > upper_bound:
                 lower_bound, upper_bound = upper_bound, lower_bound
-            guess_number(lower_bound, upper_bound)
+            final_score = guess_number(lower_bound, upper_bound)
         else:
-            play_levels(levels = modes[mode])
-            
+            final_score = play_levels(levels = modes[mode])
+        
+        update_leaderboards(name, mode, final_score)
+        
         again = get_choice("Want to play again?", ("y", "n"))
         if again != "y":
             break
