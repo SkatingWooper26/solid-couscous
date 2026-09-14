@@ -4,16 +4,14 @@ import random
 
 LEADERBOARD_PATH = PosixPath(__file__).resolve().parent / "Leaderboards.json"
 
-def load_leaderboards() -> dict:
-    with LEADERBOARD_PATH.open(encoding = "utf-8") as f:
-        return json.load(f)
 
 def save_leaderboards(data: dict) -> None:
     with LEADERBOARD_PATH.open("w", encoding="utf-8") as leaderboards:
         json.dump(data, leaderboards, indent=4)
 
 def get_leaderboards(wanted_difficulty: str | None = None) -> dict:
-    leaderboard_data = load_leaderboards()
+    with LEADERBOARD_PATH.open(encoding = "utf-8") as f:
+        leaderboard_data = json.load(f)
     
     if wanted_difficulty is not None:
         return leaderboard_data[wanted_difficulty]
@@ -21,7 +19,7 @@ def get_leaderboards(wanted_difficulty: str | None = None) -> dict:
         return leaderboard_data
         
 def update_leaderboards(name: str, difficulty: str, score: int) -> None:
-    leaderboard_data = load_leaderboards()
+    leaderboard_data = get_leaderboards()
         
     if difficulty not in leaderboard_data:
         leaderboard_data[difficulty] = {}
@@ -99,7 +97,10 @@ def guess_number(
             print("There seems to be an error")
     print(f"It took {attempts} guesses!")
     current_score = attempts * 5
-    return max_score - current_score
+    final_score = max(0, max_score - current_score)
+    print(f"Your final score was {final_score}")
+    return final_score
+
 
 def play_levels(levels: list[int]) -> int:
     total_score = 0
@@ -131,6 +132,7 @@ def main() -> None:
             final_score = play_levels(levels = modes[mode])
         
         update_leaderboards(name, mode, final_score)
+        print(f"{name}'s final score was {final_score}")
         
         again = get_choice("Want to play again?", ("y", "n"))
         if again != "y":
