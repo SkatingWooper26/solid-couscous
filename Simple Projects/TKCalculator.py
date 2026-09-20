@@ -26,9 +26,10 @@ def equal() -> None:
         displayed_text.set("There was an error.")
     
 def clear() -> None:
-    global expr
+    global expr, displayed_text
     
     expr = ""
+    displayed_text.set(expr)
     
 def main() -> None:
     global expr, displayed_text
@@ -40,7 +41,10 @@ def main() -> None:
     displayed_text = tk.StringVar()
     displayed_text.set(expr)
     
-    display = tk.Label(textvariable=displayed_text).grid(columnspan=4, row = 0)
+    display = tk.Label(textvariable = displayed_text, 
+                       font= ("Fixedsys", 20),
+                       relief = "sunken",
+                       width = 15).grid(columnspan=4, row = 0, pady = 5)
     
     buttons = (("7", 0, 1), ("8", 1, 1), ("9", 2, 1), ("+", 3, 1),
                ("4", 0, 2), ("5", 1, 2), ("6", 2, 2), ("-", 3, 2),
