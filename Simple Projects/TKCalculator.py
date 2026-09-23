@@ -36,7 +36,10 @@ def main() -> None:
     
     root = tk.Tk()
     root.title("Calculator")
-    root.geometry("250x300")
+    root.geometry("400x500")
+    root.configure(bg = "grey26")
+    
+    root.minsize(200, 250)
     
     root.rowconfigure(tuple(range(5)), weight = 1)
     root.columnconfigure(tuple(range(4)), weight = 1)
@@ -45,8 +48,8 @@ def main() -> None:
     displayed_text.set(expr)
     
     display = tk.Label(textvariable = displayed_text, 
-                       font= ("Fixedsys", 20),
-                       relief = "sunken").grid(columnspan=4, row = 0, pady = 5, padx = 5, sticky = "nsew")
+                       font= ("Fixedsys", 20), fg = "black",
+                       relief = "sunken", bg = "olivedrab").grid(columnspan=4, row = 0, pady = 5, padx = 5, sticky = "nsew")
     
     buttons = (("7", 0, 1), ("8", 1, 1), ("9", 2, 1), ("+", 3, 1),
                ("4", 0, 2), ("5", 1, 2), ("6", 2, 2), ("-", 3, 2),
@@ -54,7 +57,8 @@ def main() -> None:
                ("C", 0, 4), ("0", 1, 4), ("=", 2, 4), ("÷", 3, 4))
     
     for sym, x, y in buttons:
-        tk.Button(root, text=sym, width = 3, height = 2, font = ("Fixedsys", 10, "bold"),
+        tk.Button(root, text=sym, width = 3, height = 2, font = ("Fixedsys", 12, "bold"),
+                  bg = "grey30", fg = "white", activebackground = "grey50", activeforeground = "white",
                   command = lambda symbol = sym: add(symbol) if symbol not in ("=", "C") else clear() if symbol == "C" else equal()
                   ).grid(column = x, row = y, padx = 5, pady = 5, sticky = "nsew")
         
