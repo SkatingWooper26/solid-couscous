@@ -38,13 +38,15 @@ def main() -> None:
     root.title("Calculator")
     root.geometry("250x300")
     
+    root.rowconfigure(tuple(range(5)), weight = 1)
+    root.columnconfigure(tuple(range(4)), weight = 1)
+    
     displayed_text = tk.StringVar()
     displayed_text.set(expr)
     
     display = tk.Label(textvariable = displayed_text, 
                        font= ("Fixedsys", 20),
-                       relief = "sunken",
-                       width = 15).grid(columnspan=4, row = 0, pady = 5)
+                       relief = "sunken").grid(columnspan=4, row = 0, pady = 5, padx = 5, sticky = "nsew")
     
     buttons = (("7", 0, 1), ("8", 1, 1), ("9", 2, 1), ("+", 3, 1),
                ("4", 0, 2), ("5", 1, 2), ("6", 2, 2), ("-", 3, 2),
@@ -54,7 +56,7 @@ def main() -> None:
     for sym, x, y in buttons:
         tk.Button(root, text=sym, width = 3, height = 2, font = ("Fixedsys", 10, "bold"),
                   command = lambda symbol = sym: add(symbol) if symbol not in ("=", "C") else clear() if symbol == "C" else equal()
-                  ).grid(column = x, row = y, padx = 5, pady = 5)
+                  ).grid(column = x, row = y, padx = 5, pady = 5, sticky = "nsew")
         
     root.mainloop()
     
